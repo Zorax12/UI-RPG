@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
         UpdateUI();
     }
 
-    public void Attack()
+    public void AttackButton()
     {
         if (isGameOver)
             return;

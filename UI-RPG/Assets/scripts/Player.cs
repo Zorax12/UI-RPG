@@ -5,14 +5,26 @@ public class Player : Character
     [SerializeField] private Weapon[] weapons;
     [SerializeField] private Weapon activeWeapon;
 
+    [SerializeField] private Magic[] spells;
+    [SerializeField] private Magic activeSpell;
+
     [SerializeField] private float maxShieldHealth = 30f;
     [SerializeField] private float shieldRepairAmount = 10f;
     [SerializeField] private int maxShieldRepairs = 3;
 
+    [SerializeField] private int maxMana = 100;
+    [SerializeField] private int manaRegenAmount = 20;
+    [SerializeField] private int maxManaRegen = 3;
+
     private float shieldHealth;
     private int shieldRepairs;
+    private int mana;
+    private int manaRegen;
 
-    public string ActiveWeaponName 
+    private int selectedWeaponID = 0;
+    private int selectedSpellID = 0;
+
+    public string ActiveWeaponName
     {
         get { return activeWeapon.weaponName; }
     }
@@ -27,6 +39,26 @@ public class Player : Character
         get { return activeWeapon.AbilityDescription; }
     }
 
+    public string ActiveSpellName
+    {
+        get { return activeSpell.SpellName; }
+    }
+
+    public string ActiveSpellStats
+    {
+        get { return activeSpell.MinDamage.ToString("F0") + " - " + activeSpell.MaxDamage.ToString("F0"); }
+    }
+    
+    public string ActiveSpellEffect
+    {
+        get { return activeSpell.EffectDescription; }
+    }
+
+    public int Mana
+    {
+        get { return mana; }
+    }
+
     public float ShieldHealth
     {
         get { return shieldHealth; }
@@ -37,11 +69,41 @@ public class Player : Character
         get { return shieldRepairs; }
     }
 
-    private int selectedWeaponID = 0;
+    public int RemainingManaRegen
+    {
+        get { return manaRegen; }
+       
+    }
 
     public override void Attack(Character toHit)
     {
         toHit.TakeDamage(activeWeapon);
+    }
+
+    public bool CastActiveSpell(Character target)
+    {
+        if (activeSpell == null)
+            return false;
+
+        if (mana < activeSpell.ManaCost)
+            return false;
+
+        mana -= activeSpell.ManaCost;
+
+        if (activeSpell.TargetsSelf)
+        {
+            HealMagic healSpell = activeSpell as HealMagic;
+            if (healSpell == null)
+                return false;
+
+            Heal(healSpell.GetHealAmount());
+        }
+        else
+        {
+            target.TakeDamage(activeSpell.GetDamage());
+        }
+
+        return true;
     }
 
     public void SwitchWeapon()
@@ -50,10 +112,39 @@ public class Player : Character
         activeWeapon = weapons[selectedWeaponID];
     }
 
+    public void SwitchSpell()
+    {
+        if (spells == null || spells.Length == 0)
+            return;
+
+        selectedSpellID = (++selectedSpellID) % spells.Length;
+        activeSpell = spells[selectedSpellID];
+    }
+
     public void InitializeShield()
     {
         shieldHealth = maxShieldHealth;
         shieldRepairs = maxShieldRepairs;
+    }
+
+    public void InitializeMana()
+    {
+        mana = maxMana;
+        manaRegen = maxManaRegen;
+    }
+
+    public void RejuvenateMana()
+    {
+        if (manaRegen <= 0)
+            return;
+        
+        manaRegen--;
+        mana += manaRegenAmount;
+
+        if (mana > maxMana)
+        {
+            mana = maxMana;
+        }
     }
 
     public void TakeDamageToShield(float damage)
@@ -83,6 +174,8 @@ public class Player : Character
     private void Start()
     {
         activeWeapon = weapons[0];
+        activeSpell = spells[0];
         InitializeShield();
+        InitializeMana();
     }
 }

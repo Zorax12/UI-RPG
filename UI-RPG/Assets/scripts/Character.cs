@@ -3,7 +3,13 @@ using UnityEngine;
 public abstract class Character : MonoBehaviour
 {
     public float health;
+    private float maxHealth;
     [SerializeField] private string charName;
+
+    void Awake()
+    {
+        maxHealth = health;
+    }
 
     public string CharName 
     {
@@ -27,5 +33,15 @@ public abstract class Character : MonoBehaviour
     {
         float damage = weapon.GetDamage();
         health = health - damage;
+    }
+    
+    public void Heal(float amount)
+    {
+        health += amount;
+
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
     }
 }

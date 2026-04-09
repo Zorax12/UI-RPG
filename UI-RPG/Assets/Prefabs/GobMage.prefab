@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a425171fe79be224b96700c30dcbf716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagicEnemy
-  health: 25
+  health: 15
   charName: Goblin Mage
   minDamage: 5
   maxDamage: 8

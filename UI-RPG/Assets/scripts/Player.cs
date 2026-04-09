@@ -8,6 +8,8 @@ public class Player : Character
     [SerializeField] private Magic[] spells;
     [SerializeField] private Magic activeSpell;
 
+    [SerializeField] private float maxPlayerHealth = 100f;
+
     [SerializeField] private float maxShieldHealth = 30f;
     [SerializeField] private float shieldRepairAmount = 10f;
     [SerializeField] private int maxShieldRepairs = 3;
@@ -79,6 +81,32 @@ public class Player : Character
     public int RemainingManaRegen
     {
         get { return manaRegen; }
+    }
+
+    public void ResetForNewLevel()
+    {
+        health = maxPlayerHealth;
+        InitializeShield();
+        InitializeMana();
+
+        selectedWeaponID = 0;
+        selectedSpellID = 0;
+        activeWeapon = weapons[0];
+        activeSpell = spells[0];
+
+        ResetWeaponCharges();
+    }
+
+    private void ResetWeaponCharges()
+    {
+        for (int i = 0; i < weapons.Length; i++)
+        {
+            PoisonWeapon poisonWeapon = weapons[i] as PoisonWeapon;
+            if (poisonWeapon != null)
+            {
+                poisonWeapon.ResetPoisonCharges();
+            }
+        }
     }
 
     public override void Attack(Character toHit)

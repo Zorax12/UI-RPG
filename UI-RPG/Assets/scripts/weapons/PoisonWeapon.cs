@@ -4,7 +4,8 @@ public class PoisonWeapon : Weapon
 {
     [SerializeField] private float minPoisonDamage;
     [SerializeField] private float maxPoisonDamage;
-    [SerializeField] private int poisonCount;
+    [SerializeField] private int poisonCount = 2;
+    [SerializeField] private int maxPoisonCount = 2;
 
     public override string AbilityDescription
     {
@@ -20,5 +21,10 @@ public class PoisonWeapon : Weapon
             damage += Random.Range(minPoisonDamage, maxPoisonDamage);
         }
         return damage;
+    }
+
+    public void ResetPoisonCharges()
+    {
+        poisonCount = maxPoisonCount;
     }
 }

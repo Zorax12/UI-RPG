@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 521787c1181a07349b6aec5770965c0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  health: 30
+  health: 15
   charName: Goblin
   minDamage: 2
   maxDamage: 3

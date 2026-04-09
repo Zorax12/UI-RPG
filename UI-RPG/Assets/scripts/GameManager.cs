@@ -9,18 +9,54 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private TMP_Text playerName, playerHp, playerWeapon, weaponStats, weaponAbility;
     [SerializeField] private TMP_Text spellText, spellStats, spellEffectText, manaText, manaRejuvText;
+    [SerializeField] private TMP_Text shieldText, shieldRepairText;
 
-    [SerializeField] private TMP_Text shieldText, shieldRepairText ;
+    [SerializeField] private TMP_Text levelText;
+    [SerializeField] private TMP_Text enemiesLeftText;
 
     [SerializeField] private GameObject gameOverPanel;
 
     private bool isGameOver;
+    private int currentLevel = 1;
+    private int enemiesLeftInLevel;
 
     void Start()
     {
         isGameOver = false;
         gameOverPanel.SetActive(false);
+        StartLevel(1);
+    }
+
+    private int GetEnemyCountForLevel(int level)
+    {
+        if (level >= 6)
+            return 6;
+
+        return level;
+    }
+
+    private void StartLevel(int level)
+    {
+        currentLevel = level;
+        enemiesLeftInLevel = GetEnemyCountForLevel(level);
+
+        player.ResetForNewLevel();
+        enemyManager.SpawnEnemy();
         UpdateUI();
+    }
+
+    private void CompleteCurrentEnemy()
+    {
+        enemiesLeftInLevel--;
+
+        if (enemiesLeftInLevel > 0)
+        {
+            enemyManager.SpawnEnemy();
+            UpdateUI();
+            return;
+        }
+
+        StartLevel(currentLevel + 1);
     }
 
     private void UpdateUI()
@@ -40,6 +76,16 @@ public class GameManager : MonoBehaviour
 
         shieldText.text = "Shield: " + player.ShieldHealth.ToString("F0");
         shieldRepairText.text = player.RemainingShieldRepairs.ToString();
+
+        if (levelText != null)
+        {
+            levelText.text = "Level: " + currentLevel.ToString();
+        }
+
+        if (enemiesLeftText != null)
+        {
+            enemiesLeftText.text = "Enemies left: " + enemiesLeftInLevel.ToString();
+        }
 
         enemyManager.UpdateEnemyUI();
     }
@@ -103,13 +149,11 @@ public class GameManager : MonoBehaviour
             return;
         
         player.Attack(currentEnemy);
-        
         enemyManager.UpdateEnemyUI();
 
         if (enemyManager.IsCurrentEnemyDead())
         {
-            enemyManager.SpawnEnemy();
-            UpdateUI();
+            CompleteCurrentEnemy();
             return;
         }
 
@@ -127,7 +171,6 @@ public class GameManager : MonoBehaviour
             return;
 
         float healthBeforeCast = player.Health;
-        int manaBeforeCast = player.Mana;
 
         bool castSuccess = player.CastActiveSpell(currentEnemy);
 
@@ -147,8 +190,7 @@ public class GameManager : MonoBehaviour
 
         if (enemyManager.IsCurrentEnemyDead())
         {
-            enemyManager.SpawnEnemy();
-            UpdateUI();
+            CompleteCurrentEnemy();
             return;
         }
 

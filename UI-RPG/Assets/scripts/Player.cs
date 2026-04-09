@@ -99,9 +99,9 @@ public class Player : Character
 
     private void ResetWeaponCharges()
     {
-        for (int i = 0; i < weapons.Length; i++)
+        foreach (Weapon weapon in weapons)
         {
-            PoisonWeapon poisonWeapon = weapons[i] as PoisonWeapon;
+            PoisonWeapon poisonWeapon = weapon as PoisonWeapon;
             if (poisonWeapon != null)
             {
                 poisonWeapon.ResetPoisonCharges();

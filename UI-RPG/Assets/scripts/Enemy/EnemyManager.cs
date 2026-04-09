@@ -55,15 +55,6 @@ public class EnemyManager : MonoBehaviour
         enemyExtraText.text = currentEnemy.ExtraInfoText;
     }
 
-    public void DamageCurrentEnemy(Character attacker)
-    {
-        if (currentEnemy == null)
-            return;
-
-        attacker.Attack(currentEnemy);
-        UpdateEnemyUI();
-    }
-
     public bool IsCurrentEnemyDead()
     {
         return currentEnemy != null && currentEnemy.health <= 0;

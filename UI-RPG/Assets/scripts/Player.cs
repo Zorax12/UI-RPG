@@ -84,6 +84,12 @@ public class Player : Character
     public override void Attack(Character toHit)
     {
         toHit.TakeDamage(activeWeapon);
+
+        HealWeapon healWeapon = activeWeapon as HealWeapon;
+        if (healWeapon != null)
+        {
+            Heal(healWeapon.HealAmount);
+        }
     }
 
     public bool CastActiveSpell(Character target)

@@ -1,10 +1,10 @@
 # UI-RPG
 ## OOP Principi 
 <br/>
-1:<br/>
-2:<br/>
-3:<br/>
-4:<br/>
+1: Enkapsulācija<br/>
+2: Mantošana<br/>
+3: Polimorfisms<br/>
+4: Abstrakcija<br/>
 
 ## Papildus uzdevumi
 1: Vairogs: Spelētājam ir izvēle starp uzbrukšanu un vairoga izmantošanu. Tiek pievienotas 2 pogas. Defend un repair shield. Defend poga izmanto vairogu, kam ir 100 "dzīvības", pretinieks uzbrūk vairogam kad tas ir aktīvs un parastajām dzīvībām kad tas nav aktīvs. Repair pogai ir 3 charges, kas nedaudz atjauno vairogu. <br/>
@@ -29,4 +29,4 @@ Tika pievienotas 3 pogas - Cast, switch spell un rejuvenate. Cast - izmanto izv�
 Basic spell: dod damage pretiniekiem.<br/>
 Healing spell: atjauno spēlētāja dzīvību<br/>
 <br/>
-5: 
+5: Līmeņu sistēma: spēle sākas ar pirmo līmeni, kur ir viens pretinieks. Kad pretinieku uzvar, 2. līmenis ar 2 pretiniekiem. Spēlētāja stats atjaunojas ar katru līmeni

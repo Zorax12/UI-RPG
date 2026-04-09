@@ -68,6 +68,30 @@ public class GameManager : MonoBehaviour
         UpdateUI();
     }
 
+    private void TriggerEnemyTurn(Enemy currentEnemy)
+    {
+        if (currentEnemy == null)
+            return;
+
+        MagicEnemy magicEnemy = currentEnemy as MagicEnemy;
+        if (magicEnemy != null && magicEnemy.TryHealInsteadOfAttack())
+        {
+            magicEnemy.Heal(magicEnemy.GetHealAmount());
+            enemyManager.UpdateEnemyUI();
+            UpdateUI();
+            return;
+        }
+
+        currentEnemy.DealDamageToPlayer(player);
+        player.DeactivateShield();
+        UpdateUI();
+
+        if (player.health <= 0)
+        {
+            TriggerGameOver();
+        }
+    }
+
     public void AttackButton()
     {
         if (isGameOver)
@@ -89,15 +113,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        float enemyDamage = currentEnemy.RollDamage();
-        player.TakeDamage(enemyDamage);
-        UpdateUI();
-
-        if (player.health <= 0)
-        {
-            TriggerGameOver();
-        }
-        
+        TriggerEnemyTurn(currentEnemy);
     }
 
     public void CastButton()
@@ -136,14 +152,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        float enemyDamage = currentEnemy.RollDamage();
-        player.TakeDamage(enemyDamage);
-        UpdateUI();
-
-        if (player.health <= 0)
-        {
-            TriggerGameOver();
-        }
+        TriggerEnemyTurn(currentEnemy);
     }
 
     public void RejuvenateButton()
@@ -165,9 +174,26 @@ public class GameManager : MonoBehaviour
         if (currentEnemy == null)
             return;
 
-        float enemyDamage = currentEnemy.RollDamage();
-        player.TakeDamageToShield(enemyDamage);
+        player.ActivateShield();
+
+        MagicEnemy magicEnemy = currentEnemy as MagicEnemy;
+        if (magicEnemy != null && magicEnemy.TryHealInsteadOfAttack())
+        {
+            magicEnemy.Heal(magicEnemy.GetHealAmount());
+            enemyManager.UpdateEnemyUI();
+            player.DeactivateShield();
+            UpdateUI();
+            return;
+        }
+
+        currentEnemy.DealDamageToPlayer(player);
+        player.DeactivateShield();
         UpdateUI();
+
+        if (player.health <= 0)
+        {
+            TriggerGameOver();
+        }
     }
 
     public void RepairShieldButton()

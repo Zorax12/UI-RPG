@@ -2,5 +2,13 @@ using UnityEngine;
 
 public class FastEnemy : Enemy
 {
-   //fast enemy. Ignores Player shield, low damage and health.
+    public override bool IgnoresShield
+    {
+        get { return true; }
+    }
+
+    public override string ExtraInfoText
+    {
+        get { return "Ignores shield"; }
+    }
 }

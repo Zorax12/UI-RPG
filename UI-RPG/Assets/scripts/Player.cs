@@ -21,6 +21,8 @@ public class Player : Character
     private int mana;
     private int manaRegen;
 
+    private bool shieldActive;
+
     private int selectedWeaponID = 0;
     private int selectedSpellID = 0;
 
@@ -64,6 +66,11 @@ public class Player : Character
         get { return shieldHealth; }
     }
 
+    public bool ShieldActive
+    {
+        get { return shieldActive; }
+    }
+
     public int RemainingShieldRepairs
     {
         get { return shieldRepairs; }
@@ -72,7 +79,6 @@ public class Player : Character
     public int RemainingManaRegen
     {
         get { return manaRegen; }
-       
     }
 
     public override void Attack(Character toHit)
@@ -100,7 +106,7 @@ public class Player : Character
         }
         else
         {
-            target.TakeDamage(activeSpell.GetDamage());
+            target.TakeMagicDamage(activeSpell.GetDamage());
         }
 
         return true;
@@ -125,12 +131,23 @@ public class Player : Character
     {
         shieldHealth = maxShieldHealth;
         shieldRepairs = maxShieldRepairs;
+        shieldActive = false;
     }
 
     public void InitializeMana()
     {
         mana = maxMana;
         manaRegen = maxManaRegen;
+    }
+
+    public void ActivateShield()
+    {
+        shieldActive = true;
+    }
+
+    public void DeactivateShield()
+    {
+        shieldActive = false;
     }
 
     public void RejuvenateMana()
@@ -155,6 +172,35 @@ public class Player : Character
         {
             shieldHealth = 0;
         }
+    }
+
+    public void TakeDirectDamage(float damage)
+    {
+        health -= damage;
+    }
+
+    public void TakeEnemyDamage(float damage, bool ignoreShield)
+    {
+        if (!shieldActive || ignoreShield || shieldHealth <= 0)
+        {
+            TakeDirectDamage(damage);
+            return;
+        }
+
+        if (damage <= shieldHealth)
+        {
+            TakeDamageToShield(damage);
+            return;
+        }
+
+        float leftoverDamage = damage - shieldHealth;
+        TakeDamageToShield(shieldHealth);
+        TakeDirectDamage(leftoverDamage);
+    }
+
+    public void TakeEnemyMagicDamage(float damage)
+    {
+        TakeEnemyDamage(damage + 5f, false);
     }
 
     public void RepairShield()

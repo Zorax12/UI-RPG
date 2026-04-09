@@ -8,6 +8,7 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField] private TMP_Text enemyNameText;
     [SerializeField] private TMP_Text enemyHpText;
+    [SerializeField] private TMP_Text enemyExtraText;
 
     private Enemy currentEnemy;
 
@@ -45,11 +46,13 @@ public class EnemyManager : MonoBehaviour
         {
             enemyNameText.text = "";
             enemyHpText.text = "";
+            enemyExtraText.text = "";
             return;
         }
 
         enemyNameText.text = currentEnemy.CharName;
         enemyHpText.text = "HP: " + currentEnemy.health.ToString("F0");
+        enemyExtraText.text = currentEnemy.ExtraInfoText;
     }
 
     public void DamageCurrentEnemy(Character attacker)

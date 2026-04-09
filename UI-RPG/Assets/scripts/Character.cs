@@ -23,16 +23,21 @@ public abstract class Character : MonoBehaviour
 
     public abstract void Attack(Character toHit);
 
-    public void TakeDamage(float damage) 
+    public virtual void TakeDamage(float damage) 
     {
         health = health - damage;
         Debug.Log(charName + " got hit for " + damage + " damage! " + "Current health: " + health);
     }
 
-    public void TakeDamage(Weapon weapon)
+    public virtual void TakeDamage(Weapon weapon)
     {
         float damage = weapon.GetDamage();
         health = health - damage;
+    }
+
+    public virtual void TakeMagicDamage(float damage)
+    {
+        TakeDamage(damage);
     }
     
     public void Heal(float amount)
